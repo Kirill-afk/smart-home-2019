@@ -1,6 +1,8 @@
 package ru.sbt.mipt.oop.eventprocessors;
 
 import org.junit.jupiter.api.Test;
+import ru.sbt.mipt.oop.commandworkers.CommandSender;
+import ru.sbt.mipt.oop.eventprocessors.basic.HallDoorEventProcessor;
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.events.SensorEventLight;
 import ru.sbt.mipt.oop.homedevices.Door;
@@ -17,7 +19,7 @@ import static ru.sbt.mipt.oop.eventtypes.SensorEventType.DOOR_CLOSED;
 
 public class HallDoorEventProcessorTest {
     private SmartHome testHome;
-    private EventProcessor hallDoorEventProcessor = new HallDoorEventProcessor();
+    private EventProcessor hallDoorEventProcessor = new HallDoorEventProcessor(new CommandSender());
 
     @Test
     void hallDoorClosingEventTest() {

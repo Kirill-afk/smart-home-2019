@@ -16,7 +16,5 @@ public class SensorEventDoor extends SensorEvent {
                 ", objectId='" + this.getObjectId() + '\'' +
                 '}';
     }
-
-
 }
 

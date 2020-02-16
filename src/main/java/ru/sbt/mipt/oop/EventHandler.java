@@ -1,9 +1,13 @@
 package ru.sbt.mipt.oop;
 
-import ru.sbt.mipt.oop.eventprocessors.DoorEventProcessor;
+import ru.sbt.mipt.oop.commandworkers.CommandSender;
 import ru.sbt.mipt.oop.eventprocessors.EventProcessor;
-import ru.sbt.mipt.oop.eventprocessors.HallDoorEventProcessor;
-import ru.sbt.mipt.oop.eventprocessors.LightEventProcessor;
+import ru.sbt.mipt.oop.eventprocessors.SignalingAlarmActivateProcessor;
+import ru.sbt.mipt.oop.eventprocessors.SignalingAlarmDeactivateProcessor;
+import ru.sbt.mipt.oop.eventprocessors.basic.DoorEventProcessor;
+import ru.sbt.mipt.oop.eventprocessors.basic.HallDoorEventProcessor;
+import ru.sbt.mipt.oop.eventprocessors.basic.LightEventProcessor;
+import ru.sbt.mipt.oop.eventprocessors.decorators.EventProcessorDecorator;
 import ru.sbt.mipt.oop.events.EventProduser;
 import ru.sbt.mipt.oop.events.SensorEvent;
 import ru.sbt.mipt.oop.homeparts.SmartHome;
@@ -17,12 +21,23 @@ public class EventHandler {
     private List<EventProcessor> processors = creareEventProcessorList();
 
 
-     EventHandler(EventProduser eventProduser, SmartHome smartHome) {
+    EventHandler(EventProduser eventProduser, SmartHome smartHome) {
         this.eventProduser = eventProduser;
         this.smartHome = smartHome;
     }
 
-    public void work() {
+    private static List<EventProcessor> creareEventProcessorList() {
+        List<EventProcessor> processors = new ArrayList<>();
+        processors.add(new EventProcessorDecorator(new DoorEventProcessor()));
+        processors.add(new EventProcessorDecorator(new LightEventProcessor()));
+        processors.add(new EventProcessorDecorator(new HallDoorEventProcessor(new CommandSender())));
+        processors.add(new EventProcessorDecorator(new SignalingAlarmActivateProcessor()));
+        processors.add(new EventProcessorDecorator(new SignalingAlarmDeactivateProcessor()));
+
+        return processors;
+    }
+
+    public void handleEvent() {
         SensorEvent event = eventProduser.getNextSensorEvent();
         while (event != null) {
             System.out.println("Got event: " + event);
@@ -31,13 +46,5 @@ public class EventHandler {
             }
             event = eventProduser.getNextSensorEvent();
         }
-    }
-
-    private static List<EventProcessor> creareEventProcessorList() {
-        List<EventProcessor> processors = new ArrayList<>();
-        processors.add(new DoorEventProcessor());
-        processors.add(new LightEventProcessor());
-        processors.add(new HallDoorEventProcessor());
-        return processors;
     }
 }
