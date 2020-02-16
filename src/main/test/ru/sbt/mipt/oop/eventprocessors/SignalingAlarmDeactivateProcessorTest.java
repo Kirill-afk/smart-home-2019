@@ -65,7 +65,7 @@ public class SignalingAlarmDeactivateProcessorTest {
         assertThat(testHome.getSignaling().getState(), instanceOf(SignalingAlarmState.class));
     }
 
-    @Test
+    @Testsmarthome
     public void signallingDeactivateFromAlarmWithRightCodeTest() {
         signaling.setState(new SignalingAlarmState(signaling));
         testHome.setSignaling(signaling);

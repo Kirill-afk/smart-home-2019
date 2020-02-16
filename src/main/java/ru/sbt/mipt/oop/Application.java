@@ -1,26 +1,20 @@
 package ru.sbt.mipt.oop;
 
-import ru.sbt.mipt.oop.events.EventProduser;
-import ru.sbt.mipt.oop.events.EventProduserImplStub;
-import ru.sbt.mipt.oop.homedevices.signaling.Signaling;
-import ru.sbt.mipt.oop.homeparts.SmartHome;
-import ru.sbt.mipt.oop.iohelpers.SmartHomeReader;
-import ru.sbt.mipt.oop.iohelpers.SmartHomeReaderJSON;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 
 public class Application {
+
+    private static final Logger logger = LogManager.getLogger(Application.class);
+
+
     public static void main(String... args) {
-        // считываем состояние дома из файла
-        SmartHomeReader smartHomeReader = new SmartHomeReaderJSON();
-
-        SmartHome smartHome = smartHomeReader.readSmartHome();
-        smartHome.setSignaling(new Signaling("1"));
-        EventProduser eventProduser = new EventProduserImplStub();
-
-        EventHandler eventHandler = new EventHandler(eventProduser, smartHome);
+        ApplicationContext context = new AnnotationConfigApplicationContext(SpringConfiguration.class);
+        EventHandler eventHandler = context.getBean(EventHandler.class);
         eventHandler.handleEvent();
-
     }
-
 }
 

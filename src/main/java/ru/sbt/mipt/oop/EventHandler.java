@@ -1,5 +1,6 @@
 package ru.sbt.mipt.oop;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.sbt.mipt.oop.commandworkers.CommandSender;
 import ru.sbt.mipt.oop.eventprocessors.EventProcessor;
 import ru.sbt.mipt.oop.eventprocessors.SignalingAlarmActivateProcessor;
@@ -17,12 +18,18 @@ import java.util.List;
 
 public class EventHandler {
     private EventProduser eventProduser;
+
+    @Autowired
     private SmartHome smartHome;
     private List<EventProcessor> processors = creareEventProcessorList();
 
 
-    EventHandler(EventProduser eventProduser, SmartHome smartHome) {
+    protected EventHandler(EventProduser eventProduser, SmartHome smartHome) {
         this.eventProduser = eventProduser;
+        this.smartHome = smartHome;
+    }
+
+    public EventHandler(SmartHome smartHome) {
         this.smartHome = smartHome;
     }
 
